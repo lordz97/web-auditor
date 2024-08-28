@@ -1,0 +1,54 @@
+<div class="wrapper">
+    <div class="page-header" style="background-image: url('./assets/img/bruno-abatti.jpg');">
+        <div class="filter"></div>
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="card card-register">
+                        <h3 class="title">Veuillez renseigner vos identifiants</h3>
+                        <div class="social-line text-center">
+                            <a href="#pablo" class="btn btn-neutral btn-facebook btn-just-icon">
+                                <i class="fa fa-facebook-square"></i>
+                            </a>
+                            <a href="#pablo" class="btn btn-neutral btn-google btn-just-icon">
+                                <i class="fa fa-google-plus"></i>
+                            </a>
+                            <a href="#pablo" class="btn btn-neutral btn-twitter btn-just-icon">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        </div>
+                        <form (ngSubmit)="login()" class="register-form">
+                            <label>Nom d'utilisateur</label>
+                            <div class="input-group form-group-no-border">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="nc-icon nc-single-02"></i>
+                                </span>
+                            </div>
+
+                                <input type="text" [(ngModel)]="username" class="form-control" name="username" placeholder="Nom d'utilisateur" >
+                            </div>
+
+                            <label>Mot de passe</label>
+                            <div class="input-group form-group-no-border">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="nc-icon nc-key-25"></i>
+                                </span>
+                            </div>
+                                <input type="password" [(ngModel)]="password" class="form-control" name="password" placeholder="Mot de passe" >
+                            </div>
+                            <button type="submit" class="btn btn-danger btn-block btn-round">Connexion</button>
+                        </form>
+                        <div class="forgot">
+                            <a href="#" class="btn btn-link btn-danger">Mot de passe oublié ?</a>
+                            <a href="#" style="margin-top: 0px !important;" class="btn btn-link btn-danger">Pas encore inscrit ?</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer register-footer text-center">
+                    <h6>&copy;{{date | date: 'yyyy'}}, Conçu avec <i class="fa fa-heart heart"></i> par Harisson Zeufack
+                    </h6>
+                </div>
+            </div>
+    </div>
+</div>

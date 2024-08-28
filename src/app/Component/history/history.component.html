@@ -1,0 +1,64 @@
+<div>
+    <div *ngIf="!toggle" class="page-header" style="background-image: url('../../../assets/img/back_hist.jpg');">
+        <div class="row col-sm-12 justify-content-center" >
+            <h4 class="text-center">Liste des différents audits</h4>
+            <table class="col-sm-12" mat-table [dataSource]="dataSource">
+                <ng-container matColumnDef="audit_id">
+                <th mat-header-cell *matHeaderCellDef class="collow centre col-md-1 border"> ID </th>
+                <td mat-cell class="centre col-md-1 border" *matCellDef="let element"> {{element.audit_id}} </td>
+                </ng-container>
+                <ng-container matColumnDef="app_name">
+                <th mat-header-cell class="collow centre col-md-2 border" *matHeaderCellDef> Nom de l'application </th>
+                <td mat-cell class="centre col-md-2 border" *matCellDef="let element"> {{element.app_name}} </td>
+                </ng-container>
+                <ng-container matColumnDef="app_url">
+                <th mat-header-cell class="collow centre col-md-2 border" *matHeaderCellDef> URL </th>
+                <td mat-cell class="centre col-md-2 border" *matCellDef="let element"> {{element.app_url}} </td>
+                </ng-container>
+                <ng-container  matColumnDef="date">
+                <th mat-header-cell class="collow centre col-md-2 border" *matHeaderCellDef> Date </th>
+                <td mat-cell class="centre col-md-2 border" *matCellDef="let element"> {{element.date | date:'short'}} </td>
+                </ng-container>
+                <ng-container matColumnDef="auditor">
+                    <th mat-header-cell class="collow centre col-md-2 border" *matHeaderCellDef> Auditeur </th>
+                    <td mat-cell class="centre col-md-2 border" *matCellDef="let element"> {{element.auditor}} </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr (click)="result(row.audit_id)" mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+        </div>
+    </div>
+    <result (event)="toggle=$event" [audit]="audit" *ngIf="toggle"></result>
+</div>
+<!-- <div class="wrapper">
+    <div *ngIf="!toggle" class="page-header section-dark" style="background-image: url('assets/img/sky.png')">
+               
+                <table mat-table [dataSource]="dataSource">
+                    <ng-container matColumnDef="audit_id">
+                    <th mat-header-cell *matHeaderCellDef class="collow centre col-md-1 border"> ID </th>
+                    <td mat-cell class="centre col-md-1 border" *matCellDef="let element"> {{element.audit_id}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="app_name">
+                    <th mat-header-cell class="collow centre col-md-2 border" *matHeaderCellDef> Nom de l'application </th>
+                    <td mat-cell class="centre col-md-2 border" *matCellDef="let element"> {{element.app_name}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="app_url">
+                    <th mat-header-cell class="collow centre col-md-2 border" *matHeaderCellDef> URL </th>
+                    <td mat-cell class="centre col-md-2 border" *matCellDef="let element"> {{element.app_url}} </td>
+                    </ng-container>
+                    <ng-container  matColumnDef="date">
+                    <th mat-header-cell class="collow centre col-md-2 border" *matHeaderCellDef> Date </th>
+                    <td mat-cell class="centre col-md-2 border" *matCellDef="let element"> {{element.date}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="auditor">
+                        <th mat-header-cell class="collow centre col-md-2 border" *matHeaderCellDef> Auditeur </th>
+                        <td mat-cell class="centre col-md-2 border" *matCellDef="let element"> {{element.auditor}} </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr (click)="result(row.audit_id)" mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+        <div class="moving-clouds" style="background-image: url('assets/img/clouds.png'); "></div>
+    </div>
+    <result (event)="toggle=$event" [audit]="audit" *ngIf="toggle"></result>
+</div>
+       -->

@@ -1,0 +1,36 @@
+<div class="wrapper">
+    <div class="page-header" style="background-image: url('./assets/img/login-image.jpg');">
+        <div class="filter"></div>
+            <div class="container">
+                <div class="row justify-content-center">
+                      <div class="card card-register">
+                          <h4 class="title">Veuillez renseigner les champs suivants</h4>
+                          <form class="register-form">
+                              <label>Nom de l'application Web</label>
+                              <div class="input-group form-group-no-border" [ngClass]="{'input-group-focus':focus1===true}">
+                                <div class="input-group-prepend">
+                                  <span class="input-group-text">
+                                      <i class="nc-icon nc-laptop"></i>
+                                  </span>
+                                </div>
+                                <input type="text" [(ngModel)]="appWeb.name" class="form-control" name="name" placeholder="Nom de l'application Web">
+                              </div>
+                              <label>URL de l'application</label>
+                              <div class="input-group form-group-no-border" [ngClass]="{'input-group-focus':focus1===true}">
+                                <div class="input-group-prepend">
+                                  <span class="input-group-text">
+                                      <i class="nc-icon nc-globe"></i>
+                                  </span>
+                                </div>
+                                  <input type="text" [(ngModel)]="appWeb.url" class="form-control" placeholder="URL de l'application" (focus)="focus1=true" name="url" (blur)="focus1=false" >
+                              </div>
+                              <button (click)="enreg()" class="btn btn-danger btn-block btn-round">Valider</button>
+                          </form>
+                      </div>
+                </div>
+                <div class="footer register-footer text-center">
+                    <h6>&copy;{{test | date: 'yyyy'}}, Conçu avec <i class="fa fa-heart heart"></i> par Harisson Zeufack</h6>
+                </div>
+            </div>
+    </div>
+</div>

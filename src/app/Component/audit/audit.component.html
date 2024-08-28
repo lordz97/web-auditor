@@ -1,0 +1,1430 @@
+<div *ngIf="results && !appname" class=" back">
+    <div style="display: block" class="pad">
+        <canvas baseChart
+        [datasets]=barChartData
+        [labels]=barChartLabels
+        [options]=barChartOptions
+        [legend]=barChartLegend
+        [type]=barChartType>
+        </canvas>
+    </div>
+    <mat-card class="text-center">
+        <mat-card-title class="colhigh">Vulnérabilités Critiques</mat-card-title>
+        <mat-card-content>
+            <table mat-table [dataSource]="dataSource_high" class="mat-elevation-z8 demo-table">
+                <ng-container *ngFor="let column of columns_high" [matColumnDef]="column.columnDef">
+                  <th class="col-md-4 th-center th-high border" mat-header-cell *matHeaderCellDef>
+                    {{column.header}}
+                  </th>
+                  <td class="col-md-4 border" mat-cell *matCellDef="let row">
+                    {{column.cell(row)}}
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns_high"></tr>
+                <tr mat-row (click)="men_high()" *matRowDef="let row; columns: displayedColumns_high;"></tr>
+              </table>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="text-center">
+        <mat-card-title class="colmoy">
+            Vulnérabilités moyennes
+        </mat-card-title>
+        <mat-card-content>
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 demo-table">
+                <ng-container *ngFor="let column of columns" [matColumnDef]="column.columnDef">
+                  <th class="col-md-4 th-center th-moy border" mat-header-cell *matHeaderCellDef>
+                    {{column.header}}
+                  </th>
+                  <td class="col-md-4 border" mat-cell *matCellDef="let row">
+                    {{column.cell(row)}}
+                  </td>
+                </ng-container>
+              
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="text-center">
+        <mat-card-title class="collow">
+            Vulnérabilités légères
+        </mat-card-title>
+        <mat-card-content>
+            <table mat-table [dataSource]="dataSource_low" class="mat-elevation-z8 demo-table">
+                <ng-container *ngFor="let column of columns_low" [matColumnDef]="column.columnDef">
+                  <th class="col-md-4 th-center th-low border" mat-header-cell *matHeaderCellDef>
+                    {{column.header}}
+                  </th>
+                  <td class="col-md-4 border" mat-cell *matCellDef="let row">
+                    {{column.cell(row)}}
+                  </td>
+                </ng-container>
+              
+                <tr mat-header-row *matHeaderRowDef="displayedColumns_low"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns_low;"></tr>
+              </table>
+        </mat-card-content>
+    </mat-card>
+</div>
+<app-name *ngIf="appname" (apk)="webApp($event)"></app-name>
+<div *ngIf="!results && !appname" class="back">
+    <div>
+        <form #auditForm="ngForm" (ngSubmit)="onSubmit(auditForm)" autocomplete="off">
+            <mat-card class="pad">
+                <mat-card-title class="text-center">COLLECTE D'INFORMATIONS</mat-card-title>
+                <mat-card-content>
+                    <div >
+                        <div>
+                            <h4>Existe-t-il des pages web cachées au sein de votre application ?
+                            </h4>
+                            <div class="mt-n2">
+                                <small>Autrement dit des pages sensées être cachées aux utilisateurs normaux</small>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" name="hid_pages" type="radio" [(ngModel)]="col_Info.hid_pages" value="oui">
+                                        Oui
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" name="hid_pages" type="radio" [(ngModel)]="col_Info.hid_pages" value="non">
+                                        Non
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="col_Info.hid_pages.valueOf()==='oui'">
+                            <h4>Dans votre fichier robots.txt lequel des éléments suivants utilisez-vous pour masquer certaines de vos pages des moteurs de recherche ?</h4>
+                            <div class="row">
+                                <div class="col-sm form-group form-check-radio">
+                                    <label class="form-check-label">
+                                    <input class="form-check-input" type="radio"      [(ngModel)]="col_Info.robot_hid" name="robot_hid" value="noIndex">
+                                    NoIndex
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-group form-check-radio">
+                                    <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" [(ngModel)]="col_Info.robot_hid" name="robot_hid" value="disallow">
+                                    Disallow
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-group form-check-radio">
+                                    <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" [(ngModel)]="col_Info.robot_hid" name="robot_hid" value="aucun">
+                                    Aucun des 2
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4>En effectuant la commande nmap -sV sur votre application arrivez-vous à voir le type de serveur Web de votre application ?</h4>
+                            <div class="mt-n2">
+                                <a class="nav-link" rel="tooltip" title="Site Web de nmap" data-placement="bottom" href="https://www.nmap.org" target="_blank"><small>Si vous n'êtes pas familier avec l'outil nmap cliquez ici</small>
+                                </a>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" [(ngModel)]="col_Info.nmap" name="nmap" type="radio" value="oui">
+                                        Oui
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" [(ngModel)]="col_Info.nmap" name="nmap" type="radio" value="non">
+                                        Non
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4>En examinant les commentaires sur vos pages Web y a-t-il une des informations suivantes qui y sont marquées ?</h4>
+                                <div class="row">
+                                    <div class="col-sm form-check">
+                                        <label class="form-check-label">
+                                            <input #sql_rst class="form-check-input" [(ngModel)]="col_Info.sql_rqst" type="checkbox" name="sql_rqst">
+                                            La structure d'une requête SQL
+                                            <span class="form-check-sign"></span>
+                                        </label>
+                                    </div>
+                                    <div class="col-sm form-check">
+                                        <label class="form-check-label">
+                                            <input #admin_pass class="form-check-input" [(ngModel)]="col_Info.admin_pass" type="checkbox" name="admin_pass">
+                                            Le mot de passe administrateur de la base de données
+                                            <span class="form-check-sign"></span>
+                                        </label>
+                                    </div>
+                                    <div class="col-sm form-check">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" [(ngModel)]="col_Info.api_key" type="checkbox" name="api_key">
+                                            La clé API de Google Map
+                                            <span class="form-check-sign"></span>
+                                        </label>
+                                    </div>
+                                    <div class="col-sm form-check">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" [(ngModel)]="col_Info.hid_data" name="hid_data" type="checkbox">
+                                            Des routes pouvant conduire vers des pages internes ou cachées
+                                            <span class="form-check-sign"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                        </div>
+                        <div>
+                            <h4>Existe-t-il un fichier source map ? </h4>
+                            <div class="row">
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="col_Info.source_map" class="form-check-input" type="radio" name="source_map"  value="oui">
+                                        Oui
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="col_Info.source_map" class="form-check-input" type="radio" name="source_map" value="non">
+                                        Non
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="col_Info.source_map.valueOf()==='oui'">
+                            <h4> Est-t-il uploadé sur le serveur ?</h4>
+                            <div class="row">
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="col_Info.up_serv" class="form-check-input" type="radio" name="up_serv"  value="oui">
+                                        Oui
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="col_Info.up_serv" class="form-check-input" type="radio" name="up_serv" value="non">
+                                        Non
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            <mat-card class="pad">
+                <mat-card-title class="text-center">
+                    CONTROLE D'ACCES
+                </mat-card-title>
+                <mat-card-content class="col">
+                    <div >
+                        <div>
+                            <h4>L'application Web dispose t-elle d'administrateurs ayant plus de privilèges que les utilisateurs normaux ? </h4>
+                            <div class="row"> 
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="ctrlAcc.admin" class="form-check-input" type="radio" name="admin" value="oui">Oui  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="ctrlAcc.admin" class="form-check-input" type="radio" name="admin" value="non">Non  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div> 
+                        <div *ngIf="ctrlAcc.admin==='oui'">
+                            <h4>En ce qui concerne les administrateurs, L'URL pour pouvoir se connecter en tant que tel est-elle marquée (en clair ou en commentaire) sur une des pages Web de l'application ?</h4>
+                            <div class="row"> 
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="ctrlAcc.url_admin" class="form-check-input" type="radio" name="url_admin" value="oui">Oui  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="ctrlAcc.url_admin" class="form-check-input" type="radio" name="url_admin" value="non">Non  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>                                       
+                        <div *ngIf="ctrlAcc.admin==='oui'">
+                            <h4>La connexion en tant qu'administrateur se fait-elle en passant des identifiants directement comme paramètres d'une requête GET ? <br><small>Ex: https://auditeur.cm/adminLogin?usr=lord&pass=1234</small></h4>
+                            <div class="row"> 
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="ctrlAcc.id" class="form-check-input" type="radio" name="id" value="oui">Oui
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="ctrlAcc.id" class="form-check-input" type="radio" name="id" value="spec">Non il existe une page de connexion spéciale pour les administrateurs 
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="ctrlAcc.id" class="form-check-input" type="radio" name="id" value="meme">La page de connexion des administrateurs est la même que celle des,utilisateurs normaux
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>                        
+                        <div *ngIf="ctrlAcc.admin==='oui'">
+                            <h4>Utilisez-vous des controles stricts au niveau du front-end pour restreindre l'accès à certaines URL comme celle permettant de se connecter en tant que administrateur ?</h4>
+                            <div class="row"> 
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="ctrlAcc.strict_url" class="form-check-input" type="radio" name="strict_url" value="oui">Oui  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="ctrlAcc.strict_url" class="form-check-input" type="radio" name="strict_url" value="non">Non  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="ctrlAcc.strict_url==='oui'">
+                            <h4>Avez-vous desactivé les en-têtes X-Original-URL et X-Rewrite-URL ?</h4>
+                            <div class="row"> 
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="ctrlAcc.entete" class="form-check-input" type="radio" name="entete" value="seul">Seulement X-Original-URL/X-Rewrite-URL 
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="ctrlAcc.entete" class="form-check-input" type="radio" name="entete" value="non">Non, aucune des 2
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="ctrlAcc.entete" class="form-check-input" type="radio" name="entete" value="oui">Oui, toutes les deux
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="ctrlAcc.entete" class="form-check-input" type="radio" name="entete" value="aucun">Aucun des deux  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            <mat-card class="pad">
+                <mat-card-title class="text-center">
+                   GESTION DES COMMANDES SQL
+                </mat-card-title>
+                <mat-card-content class="col">
+                    <div>
+                        <div>
+                            <h4>Les URLs de l'application sont-elles chiffrées ?</h4>
+                            <div class="row">
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="inj_Sql.encod" class="form-check-input" type="radio" name="encod" value="certaines">
+                                        Certaines uniquement
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="inj_Sql.encod" class="form-check-input" type="radio" name="encod" value="toutes">
+                                        Toutes le sont
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="inj_Sql.encod" class="form-check-input" type="radio" name="encod" value="aucune">
+                                        Aucune ne l'est
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4>Quel système de gestion base de données l'application utilise-t-elle ?</h4>
+                            <div class="row">
+                                <div class="col-sm-3 form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="inj_Sql.sgbd" class="form-check-input" type="radio" name="sgbd" value="mySql">
+                                        MySQL
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm-3 form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="inj_Sql.sgbd" class="form-check-input" type="radio" name="sgbd" value="oracle">
+                                        Oracle
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm-3 form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="inj_Sql.sgbd" class="form-check-input" type="radio" name="sgbd" value="postgre">
+                                        PostgreSQL
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm-3 form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="inj_Sql.sgbd" class="form-check-input" type="radio" name="sgbd" value="msSql">
+                                        MS SQL Server
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 *ngIf="inj_Sql.sgbd!=''">Quelle version ?</h4>
+                            <div *ngIf="inj_Sql.sgbd==='postgre'" class="row"> 
+                                <div class="col-sm-3 form-check-radio">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="inj_Sql.ver_post" class="form-check-input" type="radio" name="ver_post" value="12"> 12 
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm-3 form-check-radio">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="inj_Sql.ver_post" class="form-check-input" type="radio" name="ver_post" value="11">11  
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm-3 form-check-radio">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="inj_Sql.ver_post" class="form-check-input" type="radio" name="ver_post" value="10">  10
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm-3 form-check-radio">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="inj_Sql.ver_post" class="form-check-input" type="radio" name="ver_post" value="9.6"> 9.6 
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div *ngIf="inj_Sql.sgbd==='mySql'" class="row"> 
+                                <div class="col-sm-3 form-check-radio">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="inj_Sql.ver_my" class="form-check-input" type="radio" name="ver_my" value="5.5">5.5
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm-3 form-check-radio">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="inj_Sql.ver_my" class="form-check-input" type="radio" name="ver_my" value="5.6">5.6  
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm-3 form-check-radio">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="inj_Sql.ver_my" class="form-check-input" type="radio" name="ver_my" value="5.7">5.7  
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm-3 form-check-radio">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="inj_Sql.ver_my" class="form-check-input" type="radio" name="ver_my" value="8.0">8.0 
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div *ngIf="inj_Sql.sgbd==='oracle'" class="row">
+                                <div class="col-sm-3 form-check-radio">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="inj_Sql.ver_ora" class="form-check-input" type="radio" name="ver_ora" value="db_12c">Oracle Database 12c  
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div> 
+                                <div class="col-sm-3 form-check-radio">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="inj_Sql.ver_ora" class="form-check-input" type="radio" name="ver_ora" value="db_18c">Oracle Database 18c  
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm-3 form-check-radio">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="inj_Sql.ver_ora" class="form-check-input" type="radio" name="ver_ora" value="db_19c">Oracle Database 19c  
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm-3 form-check-radio">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="inj_Sql.ver_ora" class="form-check-input" type="radio" name="ver_ora" value="db_21c">Oracle Database 21c  
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div *ngIf="inj_Sql.sgbd==='msSql'" class="row"> 
+                                <div class="col-sm-3 form-check-radio">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="inj_Sql.ver_ms" class="form-check-input" type="radio" name="ver_ms" value="12.0">SQL Server 2014  
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm-3 form-check-radio">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="inj_Sql.ver_ms" class="form-check-input" type="radio" name="ver_ms" value="13.0">SQL Server 2016  
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm-3 form-check-radio">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="inj_Sql.ver_ms" class="form-check-input" type="radio" name="ver_ms" value="14.0">SQL Server 2017  
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm-3 form-check-radio">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="inj_Sql.ver_ms" class="form-check-input" type="radio" name="ver_ms" value="15.0">SQL Server 2019  
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4>Les messages d'erreurs concernant les requêtes effectuées sur la base de données ont-ils été personnalisés ?</h4>
+                            <div class="row">
+                                <div class="col-sm-3 form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="inj_Sql.error" class="form-check-input" type="radio" name="error" value="oui">
+                                        Oui toutes le sont
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm-3 form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="inj_Sql.error" class="form-check-input" type="radio" name="error" value="certaines">
+                                        Certaines le sont d'autres non
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm-3 form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="inj_Sql.error" class="form-check-input" type="radio" name="error" value="non">
+                                        Non
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>                    
+                        <div>
+                            <h4>Parmi Les caractères/mots lequels sont autorisés dans vos champs de formulaire ?</h4>
+                            <div class="row"> 
+                                <div class="col-sm-2 form-check">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="inj_Sql.pt_v" class="form-check-input" type="checkbox" name="pt_v"> 
+                                    Le tiret 
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm-2 form-check">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="inj_Sql.apost" class="form-check-input" type="checkbox" name="apost">L'apostrophe '  
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm-2 form-check">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="inj_Sql.equal_rest" class="form-check-input" type="checkbox" name="equal">Le caractère =  
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm-2 form-check">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="inj_Sql.and_rest" class="form-check-input" type="checkbox" name="and">Le mot AND  
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm-2 form-check">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="inj_Sql.or_rest" class="form-check-input" type="checkbox" name="or">Le mot OR  
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            
+            <mat-card class="pad">
+                <mat-card-title class="text-center">
+                   GESTION DES SCRIPTS INTERSITES
+                </mat-card-title>
+                <mat-card-content class="col">
+                    <div >
+                        <div>
+                            <h4>L'application éffectue t-elle les contrôles syntaxiques sur des données envoyées par l'utilisateur ?<br><small>Ex: Vérifie-t-elle que dans un champ de données (champ de recherche par exemple) les utilisateurs ne puissent pas insérer des balises ?</small></h4>
+                            <div class="row"> 
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="xss.syntax" class="form-check-input" type="radio" name="syntax" value="oui">Oui  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="xss.syntax" class="form-check-input" type="radio" name="syntax" value="non">Non  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="xss.syntax==='oui'">
+                            <h4>Ces contrôles sont efféctués au niveau du ?</h4>
+                            <div class="row"> 
+                                <div class="col-sm form-check">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="xss.front_end" class="form-check-input" type="checkbox" name="front_end">Pas de contrôle front-end 
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="xss.back_end" class="form-check-input" type="checkbox" name="back_end">Pas de contrôle back-end 
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4>L'application accepte-t-elle sur un de ses champs de formulaire une URL ?</h4>
+                            <div class="row"> 
+                                <div class="col-sm-3 form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="xss.url" class="form-check-input" type="radio" name="url" value="oui">Oui  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm-3 form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="xss.url" class="form-check-input" type="radio" name="url" value="non">Non  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="xss.url==='oui'">
+                            <h4>Des contrôles existent-ils pour s'assurer par exemple que l'utilisateur fournit exactement une URL et que le protocole fourni dans cette URL est sécurisée ?</h4>
+                            <div class="row"> 
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="xss.ctr_url" class="form-check-input" type="radio" name="ctrl_url" value="oui">Oui  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="xss.ctr_url" class="form-check-input" type="radio" name="ctrl_url" value="non">Non  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4>Les données envoyées par l'utilisateur sont-elles encodées par l'application ?</h4>
+                            <div class="row"> 
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="xss.encode" class="form-check-input" type="radio" name="encode" value="oui">Oui  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="xss.encode" class="form-check-input" type="radio" name="encode" value="non">Non  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            <mat-card class="pad">
+                <mat-card-title class="text-center">PARTAGE DE RESSOURCES ENTRE ORIGINES DIFFERENTES</mat-card-title>
+                <mat-card-content class="col">
+                    <div >
+                        <div>
+                            <h4>Votre application Web communique-t-elle avec d'autres applications ?</h4>
+                            <div class="row"> 
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="cors.other_site" class="form-check-input" type="radio" name="other_site" value="oui">Oui  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="cors.other_site" class="form-check-input" type="radio" name="other_site" value="non">Non  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="cors.other_site==='oui'">
+                            <h4>Avez-vous configuré l'en-tête Access-Control-Allow-Origin-Header pour restreindre les sites avec lesquelles l'application peut communiquer ?</h4>
+                            <div class="row">
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="cors.acaoh" class="form-check-input" type="radio" name="acaoh" value="oui">Oui
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="cors.acaoh" class="form-check-input" type="radio" name="acaoh" value="non">Non, l'application fonctionne avec une wildcard
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="cors.other_site==='oui'">
+                            <h4>Cette restriction est basée sur ?</h4>
+                            <div class="row">
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="cors.list" class="form-check-input" type="radio" name="list" value="white">Une liste blanche
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="cors.list" class="form-check-input" type="radio" name="list" value="black">Une liste noire
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="cors.list==='white'">
+                            <h4>Utilisez-vous pour votre liste blanche une restriction stricte (l'URL fournie doit correspondre exactement avec celle présente dans la liste blanche) ou une restriction souple, permettant à un domaine et ses sous-domaines de communiquer avec votre application ?</h4>
+                            <div class="row">
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="cors.restric" class="form-check-input" type="radio" name="restric" value="stricte">Restriction stricte
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="cors.restric" class="form-check-input" type="radio" name="restric" value="souple">Restriction souple
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="cors.other_site==='oui'">
+                            <h4>Avez-vous configuré l'attribut same-site au niveau de l'entête Set-Cookie ?</h4>
+                            <div class="row">
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="cors.same_site" class="form-check-input" type="radio" name="same_site" value="oui">Oui
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="cors.same_site" class="form-check-input" type="radio" name="same_site" value="non">Non
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="cors.other_site==='oui'">
+                            <h4>L'application utilise-t-elle un jeton CSRF ?</h4>
+                            <div class="row">
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="cors.jtn_csrf" class="form-check-input" type="radio" name="jtn_csrf" value="oui">Oui
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="cors.jtn_csrf" class="form-check-input" type="radio" name="jtn_csrf" value="non">Non
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="cors.jtn_cookie==='oui'">
+                            <h4>Ce jeton est-il transmis dans les cookies ?</h4>
+                            <div class="row">
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="cors.jtn_cookie" class="form-check-input" type="radio" name="jtn_cookie" value="oui">Oui
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="cors.jtn_cookie" class="form-check-input" type="radio" name="jtn_cookie" value="non">Non
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="cors.jtn_csrf==='oui'">
+                            <h4>Parmi les méthodes REST suivantes quelles sont celles pour lesquelles l'application ne prend pas en charge la validation de jeton CSRF</h4>
+                            <div class="row"> 
+                                <div class="col-sm form-check">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="cors.get_valid" class="form-check-input" type="checkbox" name="get_valid">GET  
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="cors.put_valid" class="form-check-input" type="checkbox" name="put_valid">PUT  
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="cors.post_valid" class="form-check-input" type="checkbox" name="post_valid">POST  
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="cors.delete_valid" class="form-check-input" type="checkbox" name="delete_valid">DELETE  
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            <mat-card class="pad">
+                <mat-card-title class="text-center">AUTHENTIFICATION</mat-card-title>
+                <mat-card-content class="col">
+                    <div >
+                        <div>
+                            <h4>Votre application dispose-t-elle d'un mécanisme d'authetification des utilisateurs par mot de passe ?</h4>
+                            <div class="row"> 
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="auth.authen" class="form-check-input" type="radio" name="authen" value="oui">Oui  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="auth.authen" class="form-check-input" type="radio" name="authen" value="non">Non  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="auth.authen=='oui'">
+                            <h4>Parmi les requêtes et les reponses suivantes lesquelles ne sont pas chiffrées ?</h4>
+                            <div class="row"> 
+                                <div class="col-sm form-check">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="auth.encrypt_cred_client" class="form-check-input" type="checkbox" name="encrypt_cred_client">La requête contenant les identifiants envoyés par le client vers le serveur pour s'authentifier 
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="auth.encrypt_token_server" class="form-check-input" type="checkbox" name="encrypt_token_server">Les réponses contenant le jeton de session renvoyé par le serveur en cas de connexion succesive  
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="auth.encrypt_token_client" class="form-check-input" type="checkbox" name="encrypt_token_client">Les requêtes contenant le jeton de session, envoyées par le client vers le serveur pour accéder à des informations sensibles
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="auth.authen=='oui'">
+                            <h4>S'agissant des protocoles HTTP et HTTPS</h4>
+                            <div class="row"> 
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="auth.https" class="form-check-input" type="radio" name="http" value="every_https">Toutes les requêtes et réponses se font avec HTTPS
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="auth.https" class="form-check-input" type="radio" name="http" value="every_http">Toutes les requêtes et réponses se font avec HTTP
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>                                
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="auth.https" class="form-check-input" type="radio" name="https" value="some">Certaines sont en HTTP et d'autres en HTTPS  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="auth.authen=='oui'">
+                            <h4>Lors de l"inscription des utilisateurs l'application kes oblige-t-elle à créer des mots de passe remplissant les critères suivants ?:</h4>
+                            <div class="row"> 
+                                <div class="col-sm form-check">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="auth.min_char" class="form-check-input" type="checkbox" name="min_char">Un nombre minimum de charactères
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="auth.maj_min" class="form-check-input" type="checkbox" name="maj_min">Une combinaisons de majuscules et de minuscules 
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="auth.char_spe" class="form-check-input" type="checkbox" name="char_spe">Au moins un charactère spécial
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="auth.authen=='oui'">
+                            <h4>Y a-t-il un nombre maximal de tentatives de connexion ?</h4>
+                            <div class="row"> 
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="auth.max_co" class="form-check-input" type="radio" name="max_co" value="oui">Oui  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="auth.max_co" class="form-check-input" type="radio" name="max_co" value="non">Non  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="auth.max_co=='oui'">
+                            <h4>Que se passe-t-il après que ce nombre ait été atteint ?</h4>
+                            <div class="row"> 
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="auth.after_fail" class="form-check-input" type="radio" name="after_fail" value="block">Blocage d'adresse IP  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="auth.after_fail" class="form-check-input" type="radio" name="after_fail" value="lock">Verouillage du compte    
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="auth.after_fail" class="form-check-input" type="radio" name="after_fail" value="block_lock">Blocage d'adresse + verouillage du compte  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="auth.after_fail" class="form-check-input" type="radio" name="after_fail" value="rien">Rien  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="auth.after_fail=='block' || auth.after_fail=='block_lock'">
+                            <h4>S'agissant du blocage d'adresse IP le compteur de tentatives infructueuses se réinitialise-t-il lorsqu'une connexion est reussie avec cette adresse independamment du compte aavec lequel elle se connecte ?</h4>
+                            <div class="row"> 
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="auth.reinit" class="form-check-input" type="radio" name="reinit" value="oui">Oui  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="auth.reinit" class="form-check-input" type="radio" name="reinit" value="non">Non  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4>En cas d'échec d'authetification, l'application affiche un message d'erreur...</h4>
+                            <div class="row"> 
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="auth.mess_err" class="form-check-input" type="radio" name="mes_err" value="exact_id">Spécifiant exactement le ou les identifiants incorrects  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="auth.mess_err" class="form-check-input" type="radio" name="mes_err" value="non_exact">Indiquant que l'un des identifiants est incorrect sans pour autant dire lequel  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="auth.authen=='oui'">
+                            <h4>L'application dispose-t-elle d'une fonctionnalité CAPTCHA ?</h4>
+                            <div class="row"> 
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="auth.captcha" class="form-check-input" type="radio" name="captcha" value="oui">Oui  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="auth.captcha" class="form-check-input" type="radio" name="captcha" value="non">Non  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            <mat-card class="pad">
+                <mat-card-title class="text-center">
+                    UPLOAD DE FICHIERS
+                </mat-card-title>
+                <mat-card-content class="col">
+                    <div >
+                        <div>
+                            <h4>L'application permet-elle aux utilisateurs d'uploader des fichiers vers elle-même ?</h4>
+                            <div class="row"> 
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="file_up.upload" class="form-check-input" type="radio" name="upload" value="oui">Oui  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="file_up.upload" class="form-check-input" type="radio" name="upload" value="non">Non  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="file_up.upload=='oui'">
+                            <h4>Appliquez-vous des restrictions sur le type de fichier pouvant être uploadé sur le serveur ?</h4>
+                            <div class="row"> 
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="file_up.file_restric" class="form-check-input" type="radio" name="file_restric" value="oui">Oui  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="file_up.file_restric" class="form-check-input" type="radio" name="file_restric" value="non">Non  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="file_up.file_restric=='oui'">
+                            <h4 >Parmi les fichiers suivants lesquels sont autorisés</h4>
+                            <div class="row"> 
+                                <div class="col-sm form-check">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="file_up.php" class="form-check-input" type="checkbox" name="php">Les fichiers php ? 
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="file_up.aspx" class="form-check-input" type="checkbox" name="aspx">Les fichiers aspx ? 
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="file_up.autre" class="form-check-input" type="checkbox" name="autre">Un autre type de fichiers ? 
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4>L'application implémente-t-elle une fonctionnalité empêchant l'execution des scripts provenant des utilisateurs ? </h4>
+                            <div class="row"> 
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="file_up.script" class="form-check-input" type="radio" name="script" value="oui">Oui  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="file_up.script" class="form-check-input" type="radio" name="script" value="non">Non  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            <mat-card class="pad">
+                <mat-card-title class="text-center">GESTION DES ENTITÉS EXTERNES XML</mat-card-title>
+                <mat-card-content class="col">
+                    <div >
+                        <div>
+                            <h4>Sous quel format votre serveur enregistre et communique t-il les données ?</h4>
+                            <div class="row"> 
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="xxe.format" class="form-check-input" type="radio" name="format" value="json">JSON  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="xxe.format" class="form-check-input" type="radio" name="format" value="xml">XML  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4>L'application supporte-t-elle la resolution d'entités externes ?</h4>
+                            <div class="row"> 
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="xxe.ext_ent" class="form-check-input" type="radio" name="ext_ent" value="oui">Non  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="xxe.ext_ent" class="form-check-input" type="radio" name="ext_ent" value="non">Oui  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4>L'application supporte-t-elle XInclude ?</h4>
+                            <div class="row"> 
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="xxe.x_include" class="form-check-input" type="radio" name="x_include" value="oui">Non  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="xxe.x_include" class="form-check-input" type="radio" name="x_include" value="non">Oui  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            <mat-card class="pad">
+                <mat-card-title class="text-center">GESTION DES REQUETES SERVEURS</mat-card-title>
+                <mat-card-content class="col">
+                    <div >
+                        <div>
+                            <h4>En ce qui concerne le Back-End</h4>
+                            <div class="row"> 
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="ssrf.backend" class="form-check-input" type="radio" name="backend" value="oui">Il existe des contrôles d'accès au niveau du Back-End  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="ssrf.backend" class="form-check-input" type="radio" name="backend" value="non">Aucun contrôle d'accès n'est présent au niveau du Back-End  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4>L'application utilise-t-elle des filtres au niveau des noms de domaines avec lesquels le serveur Back-End peut communiquer ? </h4>
+                            <div class="row"> 
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="ssrf.filters" class="form-check-input" type="radio" name="filters" value="white">Des filtres basés sur les listes blanches  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="ssrf.filters" class="form-check-input" type="radio" name="filters" value="black">Des filtres basés sur les listes noires   
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="ssrf.filters" class="form-check-input" type="radio" name="filters" value="aucun">Aucun filtre n'est utilisé  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4>Existe-t-il un mécanisme d'authentification au niveau du serveur Back-End ?</h4>
+                            <div class="row"> 
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="ssrf.back_end_auth" class="form-check-input" type="radio" name="back_end_auth" value="tous">Oui, sur tout les services 
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="ssrf.back_end_auth" class="form-check-input" type="radio" name="back_end_auth" value="imp">Uniquement sur les plus importants   
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="ssrf.back_end_auth" class="form-check-input" type="radio" name="back_end_auth" value="non">Non  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            <mat-card class="pad">
+                <mat-card-title class="text-center">GESTION DU CACHE WEB</mat-card-title>
+                <mat-card-content class="col">
+                    <div >
+                        <div>
+                            <h4>A quelle fréquence effectuez-vous des modifications sur votre application Web ?</h4>
+                            <div class="row">
+                                <div class="col-sm form-group form-check-radio">
+                                    <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="freq_modif" [(ngModel)]="web_cache.freq_modif" value="month">
+                                    Au moins une fois par mois
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>                                    
+                                <div class="col-sm form-group form-check-radio">
+                                    <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="freq_modif" [(ngModel)]="web_cache.freq_modif" value="lessMonth">
+                                    Moins d'une fois par mois
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-group form-check-radio">
+                                    <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="freq_modif" [(ngModel)]="web_cache.freq_modif" value="never">
+                                    Jamais
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4>L'application utilise-t-elle un cache Web ? </h4>
+                            <div class="row"> 
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="web_cache.cache" class="form-check-input" type="radio" name="cache" value="oui">Oui  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="web_cache.cache" class="form-check-input" type="radio" name="cache" value="non">Non  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="web_cache.cache.valueOf()==='oui'">
+                            <h4>Effectuez-vous des modifications sur celui-ci ?</h4>
+                            <div class="row">
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="web_cache.freq_cache" class="form-check-input" type="radio" name="freq_cache"  value="occasio">
+                                        Occasionnellement
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="web_cache.freq_cache" class="form-check-input" type="radio" name="freq_cache" value="modif">
+                                        A chaque modification de  l'application
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="web_cache.freq_cache" class="form-check-input" type="radio" name="freq_cache" value="rare">
+                                        Très rarement voir jamais
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>                            
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            <mat-card class="pad">
+                <mat-card-title class="text-center">
+                    TRAVERSEE DE REPERTOIRE
+                </mat-card-title>
+                <mat-card-content >
+                    <div >
+                        <div>
+                            <h4>L'application dispose-t-elle d'un mécanisme pour bloquer les séquences de traversée de repertoire éventuellement introduites par les utilisateurs <small>les sequences de traversée correspondent à la suite de symboles telles que "..//" , ".//" , "../" ...</small></h4>
+                            <div class="row"> 
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="trans.seq" class="form-check-input" type="radio" name="seq" value="oui">Oui  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="trans.seq" class="form-check-input" type="radio" name="seq" value="non">Non  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>                                    
+                            </div>
+                        </div>                      
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            <mat-card class="pad">
+                <mat-card-title class="text-center">
+                    SÉCURITÉ DU RÉSEAU
+                </mat-card-title>
+                <mat-card-content >
+                    <div >
+                        <div>
+                            <h4>Pour la protection de vos équipements réseaux(routeurs, serveurs...), vous utilisez</h4>
+                            <div class="row">
+                                <div class="col-sm form-check">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="net.ids" class="form-check-input" type="checkbox" name="ids">Des IDS
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="net.ips" class="form-check-input" type="checkbox" name="ips">Des IPS
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div> 
+                                <div class="col-sm form-check">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="net.anti_virus" class="form-check-input" type="checkbox" name="anti_virus">Des Anti-virus
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>     
+                                <div class="col-sm form-check">
+                                    <label class="form-check-label">
+                                    <input [(ngModel)]="net.pare_feu" class="form-check-input" type="checkbox" name="pare_feu">Des Pare-feu
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>                          
+                            </div>
+                        </div>
+                        <div>
+                            <h4>Votre Serveur Web est situé :</h4>
+                            <div class="row"> 
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="net.dmz" class="form-check-input" type="radio" name="dmz" value="oui">Dans une zone démilitarisée (DMZ)  
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="net.dmz" class="form-check-input" type="radio" name="dmz" value="non">Dans la même zone que les autres ordinateurs
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>                                    
+                            </div>
+                        </div> 
+                        <div>
+                            <h4>A quelle fréquence mettez-vous à jour votre serveur Web ?</h4>
+                            <div class="row"> 
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="net.freq_serv" class="form-check-input" type="radio" name="freq_serv" value="mens">Mensuellement
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="net.freq_serv" class="form-check-input" type="radio" name="freq_serv" value="new_maj">Lorsqu'une nouvelle mise-à-jour est disponible
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="net.freq_serv" class="form-check-input" type="radio" name="freq_serv" value="autre">Autre
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>                                    
+                            </div>
+                        </div>
+                        <div>
+                            <h4>Avez vous des sauvegardes/ point de restauration pour votre serveur ?</h4>
+                            <div class="row">
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="net.save" class="form-check-input" type="radio" name="save" value="oui">Oui
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm form-check-radio">
+                                    <label class="form-check-label">
+                                        <input [(ngModel)]="net.save" class="form-check-input" type="radio" name="save" value="non">Non
+                                        <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>                     
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            <mat-card>
+                <div class="row justify-content-center">                                        
+                    <button style="margin-right: 20px;" type="submit" class="col-sm-2 btn btn-dark btn-round">Auditer
+                    </button>
+                    <button type="reset" class="col-sm-2 btn btn-dark btn-round">Annuler
+                    </button>
+                </div>
+        </mat-card>
+        </form>
+    </div>
+</div>

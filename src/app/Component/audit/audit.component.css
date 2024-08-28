@@ -1,0 +1,52 @@
+.pad{
+    padding-top: 100px;
+}
+.back {
+    background-color: rgb(255, 255, 255) !important;
+}
+.small{
+    margin-top: -100px!important;
+}
+.text-center {
+    color: darkorange;
+}
+.col{
+    color: #66615B !important;
+}
+.btn-dark{
+    background-color: darkorange;
+    color: white;
+    border-color: darkorange;
+}
+.btn-dark:hover{
+    background-color: #d9534f !important;
+    color: white;
+    border-color: #d9534f !important;
+}
+.border {
+    border-right: 1px solid currentColor;
+}
+.th-center {
+    color: white;
+    text-align: center;
+}
+.th-high{
+    background-color: #ff0000;
+}
+.th-moy{
+    background-color: #FFEB3B;
+}.th-low{
+    background-color: #0000ff;
+}
+.colhigh{
+    color: #ff0000;
+}
+.colmoy{
+    color: #FFEB3B;
+}
+.collow{
+    color: #0000ff;
+}
+label{
+    font-size: 150%;
+}

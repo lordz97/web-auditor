@@ -1,0 +1,130 @@
+<div class="page-header img">
+  
+    <div>
+      <div class=" col-sm-12 pad">
+        <h3>Cross-Site Scripting ou Injection de scripts intersites</h3>
+        <hr>
+        <div class="row justify-content-center">
+          <div class="col-sm-11">
+            <img mat-card-xxxl-image src="assets/img/attacks/xss.jpg" alt="">
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-sm-11">
+            <h5 style="margin-top: 30px; margin-bottom: 30px;">{{cross}}</h5>
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-sm-11" style="margin-bottom: 50px;">
+            <vg-player >
+              <vg-overlay-play></vg-overlay-play>
+              <vg-buffering></vg-buffering>
+              <vg-scrub-bar>
+                <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
+              </vg-scrub-bar>
+              <vg-controls>
+                <vg-play-pause></vg-play-pause>
+                <vg-playback-button></vg-playback-button>
+                <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
+                <vg-scrub-bar style="pointer-events: none;"></vg-scrub-bar>
+                <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
+                <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
+                <vg-track-selector></vg-track-selector>
+                <vg-mute></vg-mute>
+                <vg-volume></vg-volume>
+                <vg-fullscreen></vg-fullscreen>
+              </vg-controls>
+              <video [vgMedia]="$any(media)" #media id="singleVideo" preload="auto" crossorigin>
+                <source src="assets/xss.mp4" type="video/mp4">
+              </video>
+            </vg-player>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12">
+        <h3>Injection SQL</h3>
+        <hr>
+        <div class="row justify-content-center">
+          <div class="col-sm-11">
+            <img mat-card-xxxl-image src="assets/img/attacks/inj_sql.jpg" alt="">
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-sm-11">
+            <h5 style="margin-top: 30px; margin-bottom: 30px;">{{inj_sql}}</h5>
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-sm-11" style="margin-bottom: 50px;">
+            <vg-player style="margin-bottom: 30px;">
+              <vg-overlay-play></vg-overlay-play>
+              <vg-buffering></vg-buffering>
+              <vg-scrub-bar>
+                <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
+              </vg-scrub-bar>
+              <vg-controls>
+                <vg-play-pause></vg-play-pause>
+                <vg-playback-button></vg-playback-button>
+                <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
+                <vg-scrub-bar style="pointer-events: none;"></vg-scrub-bar>
+                <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
+                <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
+                <vg-track-selector></vg-track-selector>
+                <vg-mute></vg-mute>
+                <vg-volume></vg-volume>
+                <vg-fullscreen></vg-fullscreen>
+              </vg-controls>
+              <video [vgMedia]="$any(media2)" #media2 id="sql" preload="auto" crossorigin>
+                <source src="assets/SQL Injection.mkv" type="video/mkv">
+                <source src="assets/SQL Injection.mkv" type="video/ogg">
+                <source src="assets/SQL Injection.mkv" type="video/webm">
+              </video>
+            </vg-player>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12">
+        <h3>La traversée de repertoire</h3>
+        <hr>
+        <div class="row justify-content-center">
+          <div class="col-sm-11">
+            <img mat-card-xxxl-image src="assets/img/attacks/dir_trans.jpg" alt="">
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-sm-11">
+            <h5 style="margin-top: 30px; margin-bottom: 30px;">{{dir_trans}}</h5>
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-sm-11" style="margin-bottom: 50px;">
+            <vg-player style="margin-bottom: 30px;">
+              <vg-overlay-play></vg-overlay-play>
+              <vg-buffering></vg-buffering>
+              <vg-scrub-bar>
+                <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
+              </vg-scrub-bar>
+              <vg-controls>
+                <vg-play-pause></vg-play-pause>
+                <vg-playback-button></vg-playback-button>
+                <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
+                <vg-scrub-bar style="pointer-events: none;"></vg-scrub-bar>
+                <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
+                <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
+                <vg-track-selector></vg-track-selector>
+                <vg-mute></vg-mute>
+                <vg-volume></vg-volume>
+                <vg-fullscreen></vg-fullscreen>
+              </vg-controls>
+              <video [vgMedia]="$any(media3)" #media3 id="file_trans" preload="auto" crossorigin>
+                <source src="assets/File_traversal.mp4" type="video/mp4">
+              </video>
+            </vg-player>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

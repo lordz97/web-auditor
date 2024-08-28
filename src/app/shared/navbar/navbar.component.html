@@ -1,0 +1,37 @@
+<nav id="mynav" class="navbar navbar-expand-lg fixed-top navbar-transparent" color-on-scroll="500">
+    <div class="container">
+        <div class="navbar-translate">
+            <div class="col-sm-1"><a class="navbar-brand" [routerLink]="['/home']" href=""><img style="height: 30px; width: 150px;" src="assets/img/logo.jpg" alt="Auditee"></a></div>
+            <button class="navbar-toggler navbar-burger" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation" (click)="sidebarToggle()">
+                <span class="navbar-toggler-bar"></span>
+                <span class="navbar-toggler-bar"></span>
+                <span class="navbar-toggler-bar"></span>
+            </button>
+        </div>
+        <div class="navbar-collapse" id="navbarToggler">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item" >
+                    <a [routerLink]="['/home']" class="nav-link" rel="tooltip" title="Acceuil" data-placement="bottom">
+                        <i class="fa fa-home"></i>Acceuil
+                        <p class="d-lg-none">Acceuil</p>
+                    </a>
+                </li>
+                <li class="nav-item" >
+                    <a [routerLink]="['/history']" class="nav-link" rel="tooltip" title="Historique des audits" data-placement="bottom">
+                        <i class="fa fa-history"></i>Historique
+                        <p class="d-lg-none">Historique</p>
+                    </a>
+                </li>
+                <li class="nav-item" >
+                    <a [routerLink]="['/docs']" class="nav-link" rel="tooltip" title="Documentation" data-placement="bottom">
+                        <i class="fa fa-book"></i>Documentation
+                        <p class="d-lg-none">Documentation</p>
+                    </a>
+                </li>
+                <li class="nav-item" *ngIf="isHome()">
+                    <a (click)="logout()" target="_blank" class="btn btn-dark btn-round">Deconnexion</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

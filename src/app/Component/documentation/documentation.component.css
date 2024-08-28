@@ -1,0 +1,23 @@
+.pad{
+    padding-top: 100px;
+}
+hr {
+    position: relative;
+    top: 20px;
+    border: none;
+    height: 7px;
+    background: black;
+    margin-bottom: 50px;
+}
+.img {
+    background-image: url('../../../assets/img/book.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+} 
+.page-header{
+    justify-content: flex-start !important;
+    max-height: 10000px !important;
+}
+.space {
+    margin-top: 50 px;
+}

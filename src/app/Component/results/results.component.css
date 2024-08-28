@@ -1,0 +1,43 @@
+.text-center {
+    color: darkorange;
+}
+.border {
+    border-right: 1px solid currentColor;
+}
+.pad{
+    padding-top: 100px;
+}
+.centre{
+    text-align: center;
+}
+.th-center {
+    color: white !important;
+    text-align: center;
+}
+.th-high{
+    background-color: #ff0000;
+    color: white !important;
+}
+.th-moy{
+    background-color: #FFEB3B;
+    color: white !important;
+}.th-low{
+    background-color: #0000ff;
+    color: white !important;
+}
+.colhigh{
+    color: #ff0000;
+}
+.colmoy{
+    color: #FFEB3B;
+}
+.collow{
+    color: #0000ff;
+}
+table {
+    width: 100%;
+}
+h4{
+    margin-bottom: 20px;
+    margin-top: 40px;
+}

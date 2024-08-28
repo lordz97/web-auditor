@@ -1,0 +1,30 @@
+.text-center {
+    color: darkorange;
+}
+h4{
+    margin-bottom: 40px;
+}
+.collow{
+    background-color: darkorange;
+    color: white;
+}
+.border {
+    border-right: 1px solid currentColor;
+}
+.pad{
+    padding-top: 100px;
+}
+.back{
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  background-position: center center;
+  height: 100%;
+}
+.centre{
+    text-align: center;
+}
+table {
+    width: 200%;
+}
